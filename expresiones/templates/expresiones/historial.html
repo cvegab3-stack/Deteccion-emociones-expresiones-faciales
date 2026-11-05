@@ -1,0 +1,45 @@
+{% extends "expresiones/base.html" %}
+{% load static %}
+{% block titulo %}Historial{% endblock %}
+{% block contenido %}
+<div class="encabezado-pagina">
+  <div>
+    <h1 class="titulo-principal">Historial de <span class="acento">sesiones</span></h1>
+    <p class="subtitulo">Cada vez que inicia la cámara en el Panel en vivo se crea una sesión en PostgreSQL.</p>
+  </div>
+</div>
+
+<section class="tarjeta">
+  {% if pagina.object_list %}
+  <div class="tabla-contenedor"><table>
+    <thead><tr><th>#</th><th>Inicio</th><th>Duración</th><th>Expresión predominante</th><th>Registros</th><th>Rostro visible</th><th>Estado</th><th></th></tr></thead>
+    <tbody>
+    {% for s in pagina.object_list %}
+      <tr>
+        <td>{{ s.pk }}</td>
+        <td>{{ s.inicio|date:"d/m/Y H:i" }}</td>
+        <td>{{ s.duracion_texto }}</td>
+        <td>{% if s.expresion %}<img src="{% static 'expresiones/emojis/'|add:s.expresion.emoji %}" alt="">{{ s.expresion.nombre }}{% else %}<span class="texto-suave">—</span>{% endif %}</td>
+        <td>{{ s.total_registros }}</td>
+        <td>{% if s.fotogramas_procesados %}{{ s.porcentaje_rostro }} %{% else %}—{% endif %}</td>
+        <td><span class="chip {% if s.estado == 'activa' %}chip--activa{% elif s.estado == 'interrumpida' %}chip--error{% else %}chip--neutro{% endif %}">{{ s.get_estado_display }}</span></td>
+        <td><a class="boton boton--secundario boton--pequeno" href="{% url 'expresiones:detalle_sesion' s.pk %}">Ver detalle</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% if pagina.has_other_pages %}
+  <div class="paginacion">
+    {% if pagina.has_previous %}<a class="boton boton--secundario boton--pequeno" href="?pagina={{ pagina.previous_page_number }}">← Anterior</a>{% endif %}
+    <span class="pequeno texto-suave">Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span>
+    {% if pagina.has_next %}<a class="boton boton--secundario boton--pequeno" href="?pagina={{ pagina.next_page_number }}">Siguiente →</a>{% endif %}
+  </div>
+  {% endif %}
+  {% else %}
+  <div class="vacio">
+    <img src="{{ emojis_especiales.desconocida }}" alt="">
+    <p>Todavía no hay sesiones. Inicie la cámara en el <a href="{% url 'expresiones:panel' %}">Panel en vivo</a>.</p>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

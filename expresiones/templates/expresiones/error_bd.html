@@ -1,0 +1,19 @@
+{% extends "expresiones/base.html" %}
+{% block titulo %}Base de datos no disponible{% endblock %}
+{% block contenido %}
+<section class="tarjeta prosa">
+  <h1>No se pudo usar la base de datos</h1>
+  <div class="aviso aviso--error"><p>{{ mensaje }}</p></div>
+  {% if tipo == "migraciones" %}
+    <p>Con el entorno virtual activado, ejecute en la carpeta del proyecto:</p>
+    <p><code>python manage.py migrate</code></p>
+  {% else %}
+    <ol>
+      <li>Abra «Servicios» de Windows y verifique que <code>postgresql-x64-…</code> esté «En ejecución».</li>
+      <li>Revise <code>POSTGRES_DB</code>, <code>POSTGRES_USER</code>, <code>POSTGRES_PASSWORD</code>, <code>POSTGRES_HOST</code> y <code>POSTGRES_PORT</code> en el archivo <code>.env</code>.</li>
+      <li>Ejecute <code>python manage.py diagnostico</code> para ver el detalle.</li>
+    </ol>
+  {% endif %}
+  <p class="pequeno texto-suave">Detalle técnico: {{ detalle }}</p>
+</section>
+{% endblock %}

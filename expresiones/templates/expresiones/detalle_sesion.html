@@ -1,0 +1,62 @@
+{% extends "expresiones/base.html" %}
+{% load static %}
+{% block titulo %}Sesión {{ sesion.pk }}{% endblock %}
+{% block contenido %}
+<div class="encabezado-pagina">
+  <div>
+    <p class="pequeno"><a href="{% url 'expresiones:historial' %}">← Volver al historial</a></p>
+    <h1 class="titulo-principal">Sesión <span class="acento">{{ sesion.pk }}</span></h1>
+    <p class="subtitulo">{{ sesion.inicio|date:"l d \d\e F \d\e Y, H:i" }} · {{ sesion.get_estado_display }}</p>
+  </div>
+  <form method="post" action="{% url 'expresiones:eliminar_sesion' sesion.pk %}"
+        onsubmit="return confirm('¿Eliminar esta sesión y todos sus registros?');">
+    {% csrf_token %}
+    <button class="boton boton--peligro" type="submit">Eliminar sesión</button>
+  </form>
+</div>
+
+<div class="indicadores">
+  <div class="indicador"><span>Duración</span><strong>{{ sesion.duracion_texto }}</strong></div>
+  <div class="indicador"><span>Predominante</span><strong>{% if sesion.expresion %}<img src="{% static 'expresiones/emojis/'|add:sesion.expresion.emoji %}" alt="">{{ sesion.expresion.nombre }}{% else %}—{% endif %}</strong></div>
+  <div class="indicador"><span>Registros</span><strong>{{ total_registros }}</strong></div>
+  <div class="indicador"><span>Rostro visible</span><strong>{% if sesion.fotogramas_procesados %}{{ sesion.porcentaje_rostro }} %{% else %}—{% endif %}</strong></div>
+</div>
+
+<div class="rejilla">
+  <section class="tarjeta">
+    <div class="tarjeta__titulo"><h2>Línea de tiempo</h2><span class="pequeno texto-suave">1 bloque ≈ 1 segundo con expresión estimada</span></div>
+    {% if linea %}
+      <div class="linea-tiempo">
+        {% for p in linea %}<span style="background: {{ p.color }}" title="{{ p.hora|time:'H:i:s' }} · {{ p.nombre }} ({{ p.confianza|floatformat:0 }} %)"></span>{% endfor %}
+      </div>
+      <div class="leyenda">
+        {% for e in catalogo %}<span><i style="background: {{ e.color }}"></i>{{ e.nombre }}</span>{% endfor %}
+        {% if otra %}<span title="Expresiones de versiones anteriores (miedo, desprecio)"><i style="background: {{ otra.color_hex }}"></i>{{ otra.nombre }}</span>{% endif %}
+      </div>
+    {% else %}
+      <p class="texto-suave">Esta sesión no tiene registros (no se estimó ninguna expresión con suficiente confianza).</p>
+    {% endif %}
+  </section>
+
+  <section class="tarjeta">
+    <div class="tarjeta__titulo"><h2>Distribución</h2></div>
+    {% if barras %}
+    <div class="barras">
+      {% for b in barras %}
+      <div class="barra">
+        <img src="{% static 'expresiones/emojis/'|add:b.expresion.emoji %}" alt="">
+        <span>{{ b.expresion.nombre }}</span>
+        <div class="pista"><span style="width: {{ b.porcentaje|stringformat:'s' }}%; background: {{ b.expresion.color_hex }}"></span></div>
+        <span class="valor">{{ b.porcentaje|floatformat:0 }} %</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+      <p class="texto-suave">Sin datos.</p>
+    {% endif %}
+    {% if sesion.fotogramas_procesados %}
+    <p class="pequeno texto-suave" style="margin-top:12px">Fotogramas procesados: {{ sesion.fotogramas_procesados }} · con rostro visible: {{ sesion.porcentaje_rostro }} %.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

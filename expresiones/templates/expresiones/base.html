@@ -1,0 +1,64 @@
+{% load static %}<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{% block titulo %}ExpresaVisión{% endblock %} · Detector de expresiones</title>
+  <link rel="icon" type="image/png" href="{% static 'expresiones/emojis/felicidad.png' %}">
+  <link rel="stylesheet" href="{% static 'expresiones/css/estilos.css' %}">
+</head>
+<body>
+  {# Ondas decorativas muy sutiles en las esquinas (SVG en línea, sin imágenes externas). #}
+  <div class="ondas" aria-hidden="true">
+    <svg class="ondas__arriba" viewBox="0 0 600 360" preserveAspectRatio="none">
+      <path d="M600 0v250c-70 30-140 40-215 18C300 243 245 170 160 150 100 136 45 150 0 170V0z" />
+      <path d="M600 0v170c-60 26-130 30-200 10-80-23-130-85-210-95C130 78 70 92 20 115V0z" />
+    </svg>
+    <svg class="ondas__abajo" viewBox="0 0 600 360" preserveAspectRatio="none">
+      <path d="M0 360V120c70-30 140-38 215-16 85 25 140 98 225 118 60 14 115 0 160-20v158z" />
+      <path d="M0 360V200c60-26 130-30 200-10 80 23 130 85 210 95 60 7 120-7 170-30v105z" />
+    </svg>
+  </div>
+
+  <header class="cabecera">
+    <div class="cabecera__contenido">
+      <a class="marca" href="{% url 'expresiones:panel' %}">
+        <img src="{% static 'expresiones/emojis/felicidad.png' %}" alt="">
+        <strong>ExpresaVisión</strong>
+        <span class="marca__separador" aria-hidden="true"></span>
+        <span class="marca__subtitulo">Detector de expresiones faciales en tiempo real</span>
+      </a>
+      <nav class="navegacion" aria-label="Principal">
+        <a href="{% url 'expresiones:panel' %}" class="{% if seccion == 'panel' %}activo{% endif %}"{% if seccion == 'panel' %} aria-current="page"{% endif %}>En vivo</a>
+        <a href="{% url 'expresiones:historial' %}" class="{% if seccion == 'historial' %}activo{% endif %}"{% if seccion == 'historial' %} aria-current="page"{% endif %}>Historial</a>
+        <a href="{% url 'expresiones:acerca' %}" class="{% if seccion == 'acerca' %}activo{% endif %}"{% if seccion == 'acerca' %} aria-current="page"{% endif %}>Cómo funciona</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="contenedor">
+    <div class="avisos" id="avisos">
+      {% if error_gestor %}
+        <div class="aviso aviso--error"><p><strong>Módulo de visión no disponible.</strong> {{ error_gestor }}</p></div>
+      {% endif %}
+      {% if modelo and modelo.error %}
+        <div class="aviso aviso--error"><p><strong>Modelo de emociones no disponible.</strong> {{ modelo.error }}</p></div>
+      {% endif %}
+      {% for m in messages %}
+        <div class="aviso aviso--{% if m.tags == 'error' %}error{% elif m.tags == 'success' %}exito{% else %}info{% endif %}"><p>{{ m }}</p></div>
+      {% endfor %}
+    </div>
+    {% block contenido %}{% endblock %}
+  </main>
+
+  <footer class="pie">
+    Proyecto académico · Django + OpenCV + PostgreSQL · Modelo: <a href="https://github.com/onnx/models/tree/main/validated/vision/body_analysis/emotion_ferplus" target="_blank" rel="noopener">FER+</a> (Microsoft, MIT) ·
+    Emojis: <a href="https://github.com/googlefonts/noto-emoji" target="_blank" rel="noopener">Noto Emoji</a> (Google, Apache 2.0)
+  </footer>
+
+  <div class="notificaciones" id="notificaciones" aria-live="polite"></div>
+  <script src="{% static 'expresiones/js/comun.js' %}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

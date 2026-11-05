@@ -1,0 +1,12 @@
+# Dependencias del Detector de Expresiones Faciales (Python 3.11 a 3.13; recomendado 3.12)
+# Instalar con:  pip install -r requirements.txt
+#
+# OpenCV: se usa "opencv-contrib-python" (incluye cv2.dnn para el modelo FER+).
+# No instale también "opencv-python": ambos traen el módulo cv2 y se pisan.
+# No se necesita TensorFlow: el modelo ONNX se ejecuta con cv2.dnn.
+
+Django>=5.2,<5.3
+psycopg[binary]>=3.2,<3.4
+opencv-contrib-python>=4.10,<6
+numpy>=1.26
+python-dotenv>=1.0,<2

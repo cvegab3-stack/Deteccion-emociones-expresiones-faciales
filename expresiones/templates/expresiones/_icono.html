@@ -1,0 +1,5 @@
+{% comment %}
+Iconos SVG en línea (sin CDN ni librerías). Uso:
+  {% include "expresiones/_icono.html" with nombre="camara" %}
+Heredan el color del texto (stroke="currentColor").
+{% endcomment %}<svg class="icono-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">{% if nombre == "camara" %}<path d="M15.5 9.5 21 6.5v11l-5.5-3"/><rect x="3" y="6" width="12.5" height="12" rx="2.5"/>{% elif nombre == "barras" %}<path d="M4 20h16"/><rect x="5.5" y="11" width="3" height="6" rx="1"/><rect x="10.5" y="6" width="3" height="11" rx="1"/><rect x="15.5" y="9" width="3" height="8" rx="1"/>{% elif nombre == "play" %}<path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/>{% elif nombre == "pausa" %}<rect x="6.5" y="5" width="3.5" height="14" rx="1" fill="currentColor"/><rect x="14" y="5" width="3.5" height="14" rx="1" fill="currentColor"/>{% endif %}</svg>

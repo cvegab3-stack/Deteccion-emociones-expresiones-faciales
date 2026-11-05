@@ -1,0 +1,28 @@
+{% load static %}
+<section class="tarjeta tarjeta--video">
+  <div class="tarjeta__titulo">
+    <div class="titulo-icono">
+      <span class="icono">{% include "expresiones/_icono.html" with nombre="camara" %}</span>
+      <h2>Video en tiempo real</h2>
+    </div>
+    <span class="chip chip--neutro" id="chip-camara">Cámara detenida</span>
+  </div>
+  <div class="marco-video">
+    <img class="video" id="video" alt="Video de la cámara procesado con OpenCV" hidden>
+    <div class="marcador" id="marcador">
+      <img src="{{ emojis_especiales.sin_rostro }}" alt="">
+      <strong id="marcador-titulo">La cámara está apagada</strong>
+      <span id="marcador-texto">Pulse «Iniciar cámara» para comenzar. El video se procesa en su computadora y no se guarda.</span>
+    </div>
+  </div>
+  <div class="controles">
+    {# Un solo botón: "Iniciar cámara" (play) o "Detener" (pausa), según el estado. #}
+    <button class="boton boton--primario" id="btn-camara" type="button" data-accion="iniciar" {% if error_gestor %}disabled{% endif %}>
+      <span class="boton__icono" data-icono="iniciar">{% include "expresiones/_icono.html" with nombre="play" %}</span>
+      <span class="boton__icono" data-icono="detener" hidden>{% include "expresiones/_icono.html" with nombre="pausa" %}</span>
+      <span class="boton__texto">Iniciar cámara</span>
+    </button>
+    <span class="separador"></span>
+    <span class="pequeno texto-suave" id="info-fps"></span>
+  </div>
+</section>

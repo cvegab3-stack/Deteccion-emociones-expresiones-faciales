@@ -1,0 +1,44 @@
+# Entornos virtuales
+venv/
+.venv/
+env/
+ENV/
+
+# Credenciales y configuración local (.env.example SÍ se sube)
+.env
+*.env.local
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Django
+staticfiles/
+media/
+*.log
+db.sqlite3
+
+# Videos o fotos de prueba (no subir rostros de personas)
+*.mp4
+*.avi
+*.mov
+pruebas_locales/
+
+# Editores y sistema operativo
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# El modelo FER+ SÍ se sube (vision/modelos/emotion-ferplus-8.onnx, 34 MB)
+!vision/modelos/
+!vision/modelos/emotion-ferplus-8.onnx

@@ -1,0 +1,77 @@
+{% extends "expresiones/base.html" %}
+{% block titulo %}Cómo funciona{% endblock %}
+{% block contenido %}
+<div class="encabezado-pagina">
+  <div>
+    <h1 class="titulo-principal">Cómo <span class="acento">funciona</span></h1>
+    <p class="subtitulo">Qué hace el sistema, qué datos guarda y cuáles son sus límites.</p>
+  </div>
+</div>
+
+<div class="rejilla">
+  <div class="columna">
+    <section class="tarjeta prosa">
+      <h2>Proceso de cada fotograma (OpenCV)</h2>
+      <div class="flujo">
+        <span>📷 Captura<br><code>VideoCapture</code></span><i>→</i>
+        <span>⚙️ Procesamiento<br>espejo · gris · recorte</span><i>→</i>
+        <span>🔲 Detección<br><code>CascadeClassifier</code></span><i>→</i>
+        <span>🧠 Reconocimiento<br><code>cv2.dnn</code> + FER+</span><i>→</i>
+        <span>🎨 Dibujo<br>recuadro · texto · emoji</span><i>→</i>
+        <span>🌐 Navegador<br>MJPEG</span>
+      </div>
+      <ul>
+        <li><strong>Detección:</strong> el clasificador Haar Cascade frontal busca rostros; se analiza el más grande (el más cercano).</li>
+        <li><strong>Procesamiento:</strong> el fotograma se voltea como espejo, se pasa a escala de grises y se recorta el rostro, que se redimensiona a 64 × 64 píxeles.</li>
+        <li><strong>Reconocimiento:</strong> el modelo FER+, ya entrenado, se ejecuta con el módulo DNN de OpenCV y devuelve la probabilidad de 8 expresiones; la aplicación muestra 6 (descarta miedo y desprecio y reparte el resto hasta sumar 100 %). No hay que entrenar nada.</li>
+        <li><strong>Suavizado:</strong> las probabilidades se promedian entre fotogramas y una expresión solo se muestra si se mantiene en {{ ventana_minimo }} de los últimos {{ ventana }} fotogramas, para que el resultado no parpadee.</li>
+        <li><strong>Su cara neutra:</strong> al iniciar la cámara se miden {{ duracion_calibracion }} s de su cara relajada (línea base, solo números en memoria). Después, una expresión se elige porque <em>sube</em> al menos {{ umbral_cambio }} puntos respecto a esa línea base; si ninguna sube lo suficiente, se muestra «Neutral». Mientras no hay línea base, se muestra la más probable si supera el {{ confianza_minima }} %. Es automático: no hay que pulsar nada y no se muestra en pantalla.</li>
+        <li><strong>Solo el modelo decide:</strong> la expresión depende únicamente de las probabilidades de FER+; la línea base solo las compara con su cara relajada.</li>
+        <li><strong>Resultado:</strong> el recuadro con esquinas del color de la expresión, su nombre (sin porcentaje) y el emoji se dibujan con OpenCV directamente sobre el video. Los porcentajes se ven en el panel.</li>
+      </ul>
+    </section>
+
+    <section class="tarjeta prosa">
+      <h2>Expresiones que estima</h2>
+      <div class="barras">
+        {% for e in catalogo %}
+        <div class="barra" style="grid-template-columns: 28px 1fr"><img src="{{ e.emoji }}" alt=""><strong>{{ e.nombre }}</strong></div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+
+  <aside class="columna">
+    <section class="tarjeta prosa">
+      <h2>Qué se guarda en PostgreSQL</h2>
+      <ul>
+        <li>Sesiones: inicio, fin, expresión predominante y fotogramas procesados.</li>
+        <li>Una muestra cada {{ intervalo }} s con la expresión estimada y su confianza.</li>
+      </ul>
+      <p><strong>No se guardan fotos ni video.</strong> Cada fotograma se procesa en memoria y se descarta.</p>
+    </section>
+
+    <section class="tarjeta prosa">
+      <h2>Limitaciones</h2>
+      <ul>
+        <li>Es una <strong>estimación de la expresión visible</strong>, no del estado emocional real.</li>
+        <li>Funciona mejor con el rostro de frente, buena luz y gestos claros.</li>
+        <li>Con expresiones sutiles, el modelo tiende a responder «Neutral»; tristeza, enojo y asco necesitan gestos marcados.</li>
+        <li>FER+ también estima miedo y desprecio, pero <strong>se excluyeron</strong> porque no se detectan de forma fiable con una cámara web: sus probabilidades se descartan y las 6 restantes se reparten hasta sumar 100 %. Los registros antiguos con esas expresiones aparecen como «Otra».</li>
+        <li>Lentes oscuros, cubrebocas o una cabeza muy inclinada reducen la precisión.</li>
+        <li>El modelo aprendió de un conjunto público de fotos (FER-2013) y puede tener sesgos.</li>
+      </ul>
+    </section>
+
+    <section class="tarjeta prosa">
+      <h2>Créditos</h2>
+      <ul>
+        <li>Modelo: <a href="https://github.com/onnx/models/tree/main/validated/vision/body_analysis/emotion_ferplus" target="_blank" rel="noopener">Emotion FER+</a> (Microsoft, ONNX Model Zoo), licencia MIT.</li>
+        <li>Emojis: <a href="https://github.com/googlefonts/noto-emoji" target="_blank" rel="noopener">Noto Emoji</a> de Google, licencia Apache 2.0.</li>
+        <li>Detector Haar Cascade: OpenCV, Intel License Agreement.</li>
+        <li>Idea inicial: tutorial de reconocimiento de emociones de <a href="https://omes-va.com/reconocimiento-de-emociones-opencv-python/" target="_blank" rel="noopener">Omes</a>.</li>
+      </ul>
+    </section>
+  </aside>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "expresiones/base.html" %}
+{% block titulo %}En vivo{% endblock %}
+{% block contenido %}
+<div class="encabezado-pagina">
+  <div>
+    <h1 class="titulo-principal">Detector de expresiones faciales <span class="acento">en vivo</span></h1>
+    <p class="subtitulo">Inicia la cámara: OpenCV detecta tu rostro y un modelo ya entrenado (FER+) estima la expresión en tiempo real.</p>
+  </div>
+</div>
+
+{# Dos columnas de la misma altura: video a la izquierda; expresión y probabilidades a la derecha. #}
+<div class="rejilla rejilla--panel">
+  {% include "expresiones/_video.html" %}
+
+  <aside class="columna columna--panel">
+    {# Expresión estimada: cabecera compacta sobre la tarjeta de probabilidades. #}
+    <section class="tarjeta expresion-actual" aria-live="polite">
+      <img id="emoji-actual" src="{{ emojis_especiales.sin_rostro }}" alt="">
+      <div class="expresion-actual__texto">
+        <span class="etiqueta-suave">Expresión estimada</span>
+        <div class="nombre" id="nombre-actual">—</div>
+        <div class="texto-suave pequeno" id="detalle-actual">Cámara detenida</div>
+        <div class="medidor" title="Confianza"><span id="medidor-actual"></span></div>
+      </div>
+      <p class="nota">Estimación de la expresión visible, no del estado emocional real.</p>
+    </section>
+
+    <section class="tarjeta tarjeta--probabilidades">
+      <div class="tarjeta__titulo">
+        <div class="titulo-icono">
+          <span class="icono">{% include "expresiones/_icono.html" with nombre="barras" %}</span>
+          <h2>Probabilidades en vivo</h2>
+        </div>
+      </div>
+      <div class="barras barras--probabilidad" id="barras-probabilidad">
+        {% for e in catalogo %}
+        <div class="barra" data-clave="{{ e.clave }}">
+          <img src="{{ e.emoji }}" alt="">
+          <span class="barra__nombre">{{ e.nombre }}</span>
+          <div class="pista"><span style="background: {{ e.color }}"></span></div>
+          <span class="valor">0 %</span>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  </aside>
+</div>
+{{ catalogo|json_script:"datos-catalogo" }}
+{{ emojis_especiales|json_script:"datos-emojis" }}
+{% endblock %}
+{% block scripts %}
+{% load static %}<script src="{% static 'expresiones/js/panel.js' %}"></script>
+{% endblock %}
