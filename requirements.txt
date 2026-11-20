@@ -10,3 +10,7 @@ psycopg[binary]>=3.2,<3.4
 opencv-contrib-python>=4.10,<6
 numpy>=1.26
 python-dotenv>=1.0,<2
+
+# Solo para las pruebas funcionales (navegador Chrome o Edge automatizado).
+# Si no se instala, esas 6 pruebas se omiten y el resto funciona igual.
+selenium>=4.20,<5

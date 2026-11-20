@@ -8,6 +8,10 @@ cada sesión se guarda en **PostgreSQL** para consultarla en el *Historial*.
 Basta con abrir la página y pulsar **Iniciar cámara**: no hay que entrenar
 nada.
 
+> **¿Cómo lo arranco?** Siga la guía paso a paso de la
+> [sección 6](#6-instalación-en-windows-11). Si ya lo instaló, basta con:
+> `venv\Scripts\Activate.ps1` y luego `python manage.py runserver`.
+
 > La aplicación muestra una **estimación de la expresión visible del rostro**.
 > No determina cómo se siente realmente la persona.
 
@@ -176,81 +180,258 @@ La interfaz no usa CDN (iconos SVG en línea) y funciona sin internet.
 
 ## 6. Instalación en Windows 11
 
-Use **PowerShell** (en VS Code: `Ctrl + ñ`) dentro de la carpeta del
-proyecto, donde está `manage.py`.
+> **¿Primera vez?** Siga los pasos 1 a 8 en orden, sin saltarse ninguno.
+> Tardará unos 20 minutos.
+> **¿Ya lo instaló antes?** Vaya directo a
+> [6.9 Arrancar la aplicación otras veces](#69-arrancar-la-aplicación-otras-veces).
 
-### 6.1 Requisitos previos
+| Paso | Qué hace | Se hace |
+|---|---|---|
+| 1 | Instalar Python | una sola vez |
+| 2 | Instalar PostgreSQL (la base de datos) | una sola vez |
+| 3 | Abrir la terminal en la carpeta correcta | siempre |
+| 4 | Crear el entorno virtual e instalar librerías | una sola vez |
+| 5 | Crear el usuario y la base de datos | una sola vez |
+| 6 | Crear el archivo `.env` con sus contraseñas | una sola vez |
+| 7 | Crear las tablas y revisar que todo esté bien | una sola vez |
+| 8 | Arrancar la aplicación | siempre |
 
-1. **Python 3.12** desde <https://www.python.org/downloads/windows/>. Marque
-   *"Add python.exe to PATH"* al instalar.
-2. **PostgreSQL 17** desde <https://www.postgresql.org/download/windows/>.
-   Anote la contraseña del usuario `postgres` y deje el puerto 5432 (no hace
-   falta Stack Builder).
-3. Una cámara web.
+En los comandos de abajo, copie **solo lo que está dentro de los cuadros
+grises**, péguelo en la terminal y pulse **Enter**.
 
-### 6.2 Entorno virtual y dependencias
+---
+
+### 6.1 Paso 1: Instalar Python 3.12
+
+1. Descargue el instalador de <https://www.python.org/downloads/windows/>
+   (busque "Python 3.12", *Windows installer 64-bit*).
+2. Al abrirlo, **marque la casilla "Add python.exe to PATH"** (abajo) y pulse
+   *Install Now*.
+
+**Compruebe** en una terminal (PowerShell):
+
+```powershell
+py -3.12 --version
+```
+
+ Debe responder algo como `Python 3.12.10`.
+
+---
+
+### 6.2 Paso 2: Instalar PostgreSQL 17
+
+PostgreSQL es la base de datos donde se guardan las sesiones del Historial.
+
+1. Descargue el instalador de <https://www.postgresql.org/download/windows/>
+   → *Download the installer* → versión **17**, Windows x86-64.
+2. Ejecútelo y pulse *Next* en todas las pantallas, **excepto**:
+   - **Password:** escriba una contraseña para el usuario `postgres`.
+     **Anótela**, la necesitará en el paso 5. (Ejemplo: `postgres123`.)
+   - **Port:** deje `5432`.
+   - Al final, **desmarque** "Stack Builder" y pulse *Finish*.
+
+**Compruebe:** pulse `Win + R`, escriba `services.msc` y pulse Enter. En la
+lista debe aparecer `postgresql-x64-17` con estado **En ejecución**.
+
+---
+
+### 6.3 Paso 3: Abrir la terminal en la carpeta del proyecto
+
+La terminal debe estar en la carpeta que contiene el archivo **`manage.py`**.
+
+>  Al descomprimir el ZIP suele quedar una carpeta **dentro** de otra con el
+> mismo nombre:
+> `Deteccion-emociones-expresiones-faciales-main\Deteccion-emociones-expresiones-faciales-main\`.
+> La correcta es **la de adentro** (la que tiene `manage.py`).
+
+**Con VS Code:** *Archivo → Abrir carpeta…* → elija la carpeta de adentro →
+*Terminal → Nueva terminal* (o `Ctrl + ñ`).
+
+**Compruebe:**
+
+```powershell
+dir manage.py
+```
+
+ Debe mostrar el archivo `manage.py`. Si dice *"No se encuentra"*, está en la
+carpeta equivocada: ábrala de nuevo.
+
+---
+
+### 6.4 Paso 4: Entorno virtual e instalación de librerías
+
+El entorno virtual (`venv`) es una carpeta donde se instalan Django, OpenCV,
+etc., solo para este proyecto.
+
+**4.1 Crear el entorno** (sáltese esta línea si ya existe la carpeta `venv`):
 
 ```powershell
 py -3.12 -m venv venv
+```
+
+**4.2 Activarlo** (esto se hace **cada vez** que abra una terminal nueva):
+
+```powershell
 venv\Scripts\Activate.ps1
+```
+
+ Al inicio de la línea de la terminal debe aparecer **`(venv)`**.
+
+> Si sale un error rojo que dice *"la ejecución de scripts está deshabilitada"*,
+> ejecute esto **una sola vez** y vuelva a activar:
+> ```powershell
+> Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+> ```
+> (Si pregunta, responda `S` y Enter.)
+
+**4.3 Instalar las librerías** (con `(venv)` visible):
+
+```powershell
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-Si PowerShell bloquea la activación, ejecute una vez
-`Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
+ Termina con `Successfully installed ...` (tarda unos minutos).
 
-### 6.3 Base de datos
+---
 
-Abra psql como `postgres` (cambie `17` por su versión si es distinta):
+### 6.5 Paso 5: Crear el usuario y la base de datos
+
+**5.1 Entrar a PostgreSQL:**
 
 ```powershell
 & "C:\Program Files\PostgreSQL\17\bin\psql.exe" -U postgres
 ```
 
-Dentro de psql, con una contraseña suya:
+>  Copie la línea **completa**, con el `&` y las comillas: sin ellos
+> PowerShell da el error *"El término 'C:\Program' no se reconoce"*.
+> Si instaló otra versión (por ejemplo 18 o 19), cambie el `17` por su número.
+> Para ver cuál tiene: `dir "C:\Program Files\PostgreSQL"`.
+
+Le pedirá `Contraseña para usuario postgres:`. Escriba la contraseña del
+paso 2 y pulse Enter.
+
+>  **Mientras escribe la contraseña no se ve nada en pantalla.** Es normal:
+> escríbala igual y pulse Enter.
+
+La línea cambia a `postgres=#`. Ahora está "dentro" de PostgreSQL.
+
+**5.2 Crear el usuario y la base.** Pegue estas dos líneas (puede cambiar
+`clave123` por otra contraseña; **anótela**, es para el paso 6):
 
 ```sql
-CREATE USER expresiones_app WITH PASSWORD 'su_contrasena' CREATEDB;
+CREATE USER expresiones_app WITH PASSWORD 'clave123' CREATEDB;
 CREATE DATABASE detector_expresiones OWNER expresiones_app;
+```
+
+ Debe responder `CREATE ROLE` y `CREATE DATABASE`.
+
+**5.3 Salir de PostgreSQL:**
+
+```sql
 \q
 ```
 
-(`CREATEDB` permite que `python manage.py test` cree su base temporal.)
+ Vuelve a la terminal normal (con `(venv)` al inicio).
 
-### 6.4 Variables de entorno
+> Hay **dos contraseñas distintas**:
+> - la de `postgres` (paso 2): solo para entrar a psql;
+> - la de `expresiones_app` (paso 5.2, ej. `clave123`): la que usa la
+>   aplicación y va en el `.env`.
+
+---
+
+### 6.6 Paso 6: Crear el archivo `.env`
+
+El archivo `.env` guarda sus contraseñas. No se sube a GitHub.
 
 ```powershell
 Copy-Item .env.example .env
 notepad .env
 ```
 
-En `.env`, escriba la misma contraseña en `POSTGRES_PASSWORD` y una clave
-larga en `DJANGO_SECRET_KEY`. El archivo `.env` no se sube a GitHub.
+Se abre el Bloc de notas. **Cambie solo estas dos líneas:**
 
-### 6.5 Modelo
+```ini
+POSTGRES_PASSWORD=clave123
+DJANGO_SECRET_KEY=una-frase-larga-cualquiera-sin-espacios-123456789
+```
 
-**Ya viene incluido** en `vision/modelos/emotion-ferplus-8.onnx`. Solo si
-falta:
+- `POSTGRES_PASSWORD`: la contraseña de `expresiones_app` del paso 5.2.
+- `DJANGO_SECRET_KEY`: cualquier texto largo. Para generar uno aleatorio:
+  `python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"`
 
-1. Descárguelo de
-   <https://media.githubusercontent.com/media/onnx/models/main/validated/vision/body_analysis/emotion_ferplus/model/emotion-ferplus-8.onnx>
-2. Guárdelo en `vision/modelos/emotion-ferplus-8.onnx`.
-3. Compruebe la huella:
-   `Get-FileHash vision\modelos\emotion-ferplus-8.onnx -Algorithm SHA256`.
+Guarde (`Ctrl + S`) y cierre el Bloc de notas. No toque lo demás.
 
-### 6.6 Ejecutar
+---
+
+### 6.7 Paso 7: Crear las tablas y revisar que todo esté bien
 
 ```powershell
 python manage.py migrate
+```
+
+ Varias líneas terminadas en `... OK`.
+
+```powershell
 python manage.py diagnostico --camara
+```
+
+✅ Todas las líneas deben decir **`[OK]`**. Si alguna dice `[ERROR]`, lea el
+mensaje y busque la solución en la
+[sección 10](#10-solución-de-errores-frecuentes).
+
+> **Sobre el modelo:** el archivo `vision/modelos/emotion-ferplus-8.onnx` ya
+> viene incluido. Solo si el diagnóstico dice que falta, descárguelo de
+> <https://media.githubusercontent.com/media/onnx/models/main/validated/vision/body_analysis/emotion_ferplus/model/emotion-ferplus-8.onnx>
+> y guárdelo en esa carpeta.
+
+---
+
+### 6.8 Paso 8: Arrancar la aplicación
+
+```powershell
 python manage.py runserver
 ```
 
-- `diagnostico` revisa OpenCV, el modelo (huella e inferencia de prueba), los
-  emojis, la línea base, PostgreSQL, las migraciones y la cámara.
-- Con todo en `[OK]`, abra **<http://127.0.0.1:8000>**.
-- Para detener el servidor: `Ctrl + C`.
+✅ Debe aparecer:
+
+```
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+```
+
+Abra el navegador en **<http://127.0.0.1:8000>** y pulse **Iniciar cámara**.
+
+- **No cierre la terminal** mientras usa la aplicación: si la cierra, la página
+  deja de funcionar.
+- Para apagarla: en la terminal pulse **`Ctrl + C`**.
+
+---
+
+### 6.9 Arrancar la aplicación otras veces
+
+Con todo ya instalado, cada vez solo necesita:
+
+1. Verificar que PostgreSQL esté encendido (normalmente arranca solo con
+   Windows).
+2. Abrir la terminal en la carpeta del proyecto ([paso 3](#63-paso-3-abrir-la-terminal-en-la-carpeta-del-proyecto)).
+3. Ejecutar:
+
+```powershell
+venv\Scripts\Activate.ps1
+python manage.py runserver
+```
+
+4. Abrir <http://127.0.0.1:8000>.
+
+**Para ejecutar las pruebas** (con `(venv)` activo y PostgreSQL encendido):
+
+```powershell
+.\ejecutar_pruebas.ps1
+```
+
+Más detalles en la [sección 9](#9-pruebas).
 
 ## 7. Uso
 
@@ -296,11 +477,18 @@ Para ver la línea base y los deltas en vivo, abra
 ## 9. Pruebas
 
 ```powershell
-python manage.py test
+python manage.py test          # todas las pruebas
+.\ejecutar_pruebas.ps1          # por grupos, guardando logs en evidencias\logs
 ```
 
-**73 pruebas automáticas** (sin cámara real; usan una cámara, un detector y un
+**79 pruebas automáticas** (sin cámara real; usan una cámara, un detector y un
 clasificador simulados, y una base PostgreSQL temporal):
+
+| Tipo | Archivos | Pruebas |
+|---|---|---|
+| Unitarias | `test_vision.py`, `test_sensibilidad.py` | 57 |
+| Integración | `test_web.py` | 16 |
+| Funcionales (Selenium) | `test_funcional.py` | 6 |
 
 - **Modelo real con `cv2.dnn`** (`test_vision.py`): huella, 6 probabilidades
   que suman 1 (miedo y desprecio descartados y renormalizados), mapeo del
@@ -317,6 +505,13 @@ clasificador simulados, y una base PostgreSQL temporal):
   completo (sesión creada al iniciar, registros, fin, predominante, % de
   rostro, Historial y detalle), registros antiguos como "Otra", eliminación,
   página de ayuda si PostgreSQL no responde.
+- **Funcionales con navegador real** (`test_funcional.py`, Selenium + Chrome o
+  Edge sin ventana): CU-01 inicio, CU-02 detección en video, CU-03 sin
+  rostro, CU-04 detener y ver en Historial/detalle, CU-05 eliminar sesión,
+  CU-06 navegación. Guardan capturas en `evidencias/funcionales/`. Usan
+  Chrome por defecto; `$env:NAVEGADOR_PRUEBAS="edge"` para Edge y
+  `$env:NAVEGADOR_VISIBLE="1"` para ver el navegador. Si Selenium o el
+  navegador no están disponibles, se omiten (skip).
 
 **Prueba manual con la cámara:**
 
@@ -334,7 +529,7 @@ clasificador simulados, y una base PostgreSQL temporal):
 |---|---|
 | *"No se pudo abrir la cámara 0"* | Cierre Zoom, Teams o la app Cámara. Active *Configuración > Privacidad y seguridad > Cámara* (incluida "Permitir que las aplicaciones de escritorio accedan"). Con varias cámaras, pruebe `CAMARA_FUENTE=1` y reinicie el servidor. |
 | Video lento o negro | Pruebe `CAMARA_BACKEND=msmf` (o `dshow`) en `.env` y reinicie el servidor. |
-| *"No se encontró el modelo de emociones"* | Falta `vision/modelos/emotion-ferplus-8.onnx` (ver [6.5](#65-modelo)). |
+| *"No se encontró el modelo de emociones"* | Falta `vision/modelos/emotion-ferplus-8.onnx` (ver [paso 7](#67-paso-7-crear-las-tablas-y-revisar-que-todo-esté-bien)). |
 | Casi siempre "Expresión no clara" al empezar | Mejore la luz y marque más los gestos, o baje `CONFIANZA_MINIMA` a 0.30. |
 | Siempre "Neutral" aunque haga gestos | Detenga e inicie la cámara con la cara relajada (se vuelve a medir la línea base). Si sigue, baje `UMBRAL_CAMBIO` (0.05). |
 | Aparecen expresiones sin hacer gestos | Suba `UMBRAL_CAMBIO` (0.12) o reinicie la cámara con la cara relajada: quizá empezó sonriendo. |
@@ -374,7 +569,9 @@ detector_expresiones/
 │   ├── migrations/            # 0001 a 0003
 │   ├── templates/expresiones/ # base, panel, _video, _icono, historial, detalle, acerca, error_bd
 │   ├── static/expresiones/    # css/estilos.css, js/comun.js, js/panel.js, emojis/ (Noto)
-│   └── tests/                 # test_vision.py, test_sensibilidad.py, test_web.py, utilidades.py
+│   └── tests/                 # test_vision, test_sensibilidad, test_web, test_funcional, utilidades
+├── evidencias/                # logs y capturas que generan las pruebas
+├── ejecutar_pruebas.ps1       # ejecuta las pruebas por grupos y guarda los logs
 └── docs/licencias/            # licencias del modelo, Noto Emoji y Haar Cascade
 ```
 
