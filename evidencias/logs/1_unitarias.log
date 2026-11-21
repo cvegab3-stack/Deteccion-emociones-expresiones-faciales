@@ -1,0 +1,70 @@
+﻿Fecha: 2026-11-21 08:55:08
+Comando: python manage.py test expresiones.tests.test_vision expresiones.tests.test_sensibilidad -v 2 --noinput 2>&1
+test_cada_expresion_tiene_su_emoji_noto (expresiones.tests.test_vision.CatalogoTests.test_cada_expresion_tiene_su_emoji_noto) ... ok
+test_claves_antiguas_se_muestran_como_otra (expresiones.tests.test_vision.CatalogoTests.test_claves_antiguas_se_muestran_como_otra) ... ok
+test_ocho_clases_en_el_orden_del_modelo_y_mapeo (expresiones.tests.test_vision.CatalogoTests.test_ocho_clases_en_el_orden_del_modelo_y_mapeo) ... ok
+test_seis_expresiones_visibles (expresiones.tests.test_vision.CatalogoTests.test_seis_expresiones_visibles) ... ok
+test_textos_del_video_son_ascii (expresiones.tests.test_vision.CatalogoTests.test_textos_del_video_son_ascii) ... ok
+test_devuelve_seis_probabilidades_que_suman_uno (expresiones.tests.test_vision.ClasificadorTests.test_devuelve_seis_probabilidades_que_suman_uno) ... ok
+test_entrada_de_64x64 (expresiones.tests.test_vision.ClasificadorTests.test_entrada_de_64x64) ... ok
+test_es_determinista (expresiones.tests.test_vision.ClasificadorTests.test_es_determinista) ... ok
+test_huella_del_modelo (expresiones.tests.test_vision.ClasificadorTests.test_huella_del_modelo) ... ok
+test_modelo_danado (expresiones.tests.test_vision.ClasificadorTests.test_modelo_danado) ... ok
+test_modelo_inexistente (expresiones.tests.test_vision.ClasificadorTests.test_modelo_inexistente) ... ok
+test_archivo_inexistente_da_error_claro (expresiones.tests.test_vision.DetectorYPreprocesamientoTests.test_archivo_inexistente_da_error_claro) ... ok
+test_imagen_sin_rostro (expresiones.tests.test_vision.DetectorYPreprocesamientoTests.test_imagen_sin_rostro) ... ok
+test_recorte (expresiones.tests.test_vision.DetectorYPreprocesamientoTests.test_recorte) ... ok
+test_carga_emojis_con_transparencia (expresiones.tests.test_vision.DibujoTests.test_carga_emojis_con_transparencia) ... ok
+test_emoji_en_el_borde_no_falla (expresiones.tests.test_vision.DibujoTests.test_emoji_en_el_borde_no_falla) ... ok
+test_resultado_rostro_dibuja_recuadro_y_etiqueta (expresiones.tests.test_vision.DibujoTests.test_resultado_rostro_dibuja_recuadro_y_etiqueta) ... ok
+test_ya_no_hay_panel_de_probabilidades_en_el_video (expresiones.tests.test_vision.DibujoTests.test_ya_no_hay_panel_de_probabilidades_en_el_video) ... ok
+test_camara_abierta_pero_sin_imagen (expresiones.tests.test_vision.GestorCamaraTests.test_camara_abierta_pero_sin_imagen) ... ok
+test_camara_no_disponible (expresiones.tests.test_vision.GestorCamaraTests.test_camara_no_disponible) ... ok
+test_con_el_modelo_real (expresiones.tests.test_vision.GestorCamaraTests.test_con_el_modelo_real) ... ok
+test_confianza_es_identica_a_la_probabilidad_de_la_expresion (expresiones.tests.test_vision.GestorCamaraTests.test_confianza_es_identica_a_la_probabilidad_de_la_expresion) ... ok
+test_error_de_base_de_datos_no_detiene_el_video (expresiones.tests.test_vision.GestorCamaraTests.test_error_de_base_de_datos_no_detiene_el_video) ... ok
+test_etiqueta_del_video_sin_porcentaje (expresiones.tests.test_vision.GestorCamaraTests.test_etiqueta_del_video_sin_porcentaje) ... ok
+test_expresion_no_clara_no_se_registra (expresiones.tests.test_vision.GestorCamaraTests.test_expresion_no_clara_no_se_registra) ... ok
+test_iniciar_dos_veces_no_abre_otra_camara (expresiones.tests.test_vision.GestorCamaraTests.test_iniciar_dos_veces_no_abre_otra_camara) ... ok
+test_perdida_de_senal (expresiones.tests.test_vision.GestorCamaraTests.test_perdida_de_senal) ... ok
+test_reconoce_registra_y_transmite (expresiones.tests.test_vision.GestorCamaraTests.test_reconoce_registra_y_transmite) ... ok
+test_sin_modelo_el_video_sigue_y_no_crea_sesion (expresiones.tests.test_vision.GestorCamaraTests.test_sin_modelo_el_video_sigue_y_no_crea_sesion) ... ok
+test_sin_rostro (expresiones.tests.test_vision.GestorCamaraTests.test_sin_rostro) ... ok
+test_un_registro_por_segundo_con_el_intervalo_por_defecto (expresiones.tests.test_vision.GestorCamaraTests.test_un_registro_por_segundo_con_el_intervalo_por_defecto)
+Con INTERVALO_REGISTRO=1 se guarda una muestra por segundo, no una por fotograma. ... ok
+test_descarta_miedo_y_desprecio_y_normaliza (expresiones.tests.test_vision.SeleccionVisiblesTests.test_descarta_miedo_y_desprecio_y_normaliza) ... ok
+test_numero_de_valores_incorrecto (expresiones.tests.test_vision.SeleccionVisiblesTests.test_numero_de_valores_incorrecto) ... ok
+test_si_todo_era_miedo_reparte_por_igual (expresiones.tests.test_vision.SeleccionVisiblesTests.test_si_todo_era_miedo_reparte_por_igual) ... ok
+test_alfa_invalido (expresiones.tests.test_vision.SoftmaxYSuavizadoTests.test_alfa_invalido) ... ok
+test_cambia_cuando_la_expresion_se_mantiene (expresiones.tests.test_vision.SoftmaxYSuavizadoTests.test_cambia_cuando_la_expresion_se_mantiene) ... ok
+test_no_clara_bajo_el_minimo (expresiones.tests.test_vision.SoftmaxYSuavizadoTests.test_no_clara_bajo_el_minimo) ... ok
+test_softmax (expresiones.tests.test_vision.SoftmaxYSuavizadoTests.test_softmax) ... ok
+test_suavizado_estable_ante_un_parpadeo (expresiones.tests.test_vision.SoftmaxYSuavizadoTests.test_suavizado_estable_ante_un_parpadeo) ... ok
+test_cambio_de_tres_puntos_sigue_neutral (expresiones.tests.test_sensibilidad.DecisionPorCambioTests.test_cambio_de_tres_puntos_sigue_neutral) ... ok
+test_deltas_solo_de_las_cinco_expresiones_no_neutrales (expresiones.tests.test_sensibilidad.DecisionPorCambioTests.test_deltas_solo_de_las_cinco_expresiones_no_neutrales) ... ok
+test_enojo_que_sube_diez_puntos_gana (expresiones.tests.test_sensibilidad.DecisionPorCambioTests.test_enojo_que_sube_diez_puntos_gana) ... ok
+test_gana_el_mayor_delta (expresiones.tests.test_sensibilidad.DecisionPorCambioTests.test_gana_el_mayor_delta) ... ok
+test_calibra_y_luego_detecta_el_cambio (expresiones.tests.test_sensibilidad.GestorConLineaBaseTests.test_calibra_y_luego_detecta_el_cambio) ... ok
+test_la_camara_es_siempre_la_de_la_configuracion (expresiones.tests.test_sensibilidad.GestorConLineaBaseTests.test_la_camara_es_siempre_la_de_la_configuracion) ... ok
+test_linea_base_automatica (expresiones.tests.test_sensibilidad.GestorConLineaBaseTests.test_linea_base_automatica)
+La línea base se mide sola al iniciar; mientras tanto el modelo funciona normal. ... ok
+test_desactivada (expresiones.tests.test_sensibilidad.LineaBaseTests.test_desactivada) ... ok
+test_promedia_durante_la_duracion (expresiones.tests.test_sensibilidad.LineaBaseTests.test_promedia_durante_la_duracion) ... ok
+test_antes_de_la_linea_base_usa_el_comportamiento_clasico (expresiones.tests.test_sensibilidad.MotorDecisionTests.test_antes_de_la_linea_base_usa_el_comportamiento_clasico) ... ok
+test_cambio_pequeno_es_neutral (expresiones.tests.test_sensibilidad.MotorDecisionTests.test_cambio_pequeno_es_neutral) ... ok
+test_despues_de_la_linea_base_decide_por_cambio (expresiones.tests.test_sensibilidad.MotorDecisionTests.test_despues_de_la_linea_base_decide_por_cambio) ... ok
+test_nueva_linea_base (expresiones.tests.test_sensibilidad.MotorDecisionTests.test_nueva_linea_base) ... ok
+test_solo_decide_el_modelo (expresiones.tests.test_sensibilidad.MotorDecisionTests.test_solo_decide_el_modelo)
+Si el modelo da Felicidad 99 %, la expresión estimada es Felicidad. ... ok
+test_alternancia_conserva_el_ultimo_estable (expresiones.tests.test_sensibilidad.VentanaVotosTests.test_alternancia_conserva_el_ultimo_estable) ... ok
+test_parametros_invalidos (expresiones.tests.test_sensibilidad.VentanaVotosTests.test_parametros_invalidos) ... ok
+test_tres_de_cinco (expresiones.tests.test_sensibilidad.VentanaVotosTests.test_tres_de_cinco) ... ok
+test_un_parpadeo_no_cambia_la_decision (expresiones.tests.test_sensibilidad.VentanaVotosTests.test_un_parpadeo_no_cambia_la_decision) ... ok
+
+----------------------------------------------------------------------
+Ran 57 tests in 9.766s
+
+OK
+Found 57 test(s).
+Skipping setup of unused database(s): default.
+System check identified no issues (0 silenced).

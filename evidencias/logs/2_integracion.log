@@ -1,0 +1,59 @@
+﻿Fecha: 2026-11-21 08:55:28
+Comando: python manage.py test expresiones.tests.test_web -v 2 --noinput 2>&1
+Creating test database for alias 'default' ('test_detector_expresiones')...
+
+Found 16 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: messages, staticfiles
+  Apply all migrations: admin, auth, contenttypes, expresiones, sessions
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying expresiones.0001_initial... OK
+  Applying expresiones.0002_modelo_fer_plus... OK
+  Applying expresiones.0003_expresiones_visibles_6... OK
+  Applying sessions.0001_initial...test_estado_inicial (expresiones.tests.test_web.ApiTests.test_estado_inicial) ... ok
+test_get_no_permitido_en_acciones (expresiones.tests.test_web.ApiTests.test_get_no_permitido_en_acciones) ... ok
+test_panel_js_usa_una_sola_fuente_para_los_porcentajes (expresiones.tests.test_web.ApiTests.test_panel_js_usa_una_sola_fuente_para_los_porcentajes)
+Cabecera y barras leen estado.probabilidades y redondean con Math.round. ... ok
+test_panel_simplificado (expresiones.tests.test_web.ApiTests.test_panel_simplificado) ... ok
+test_video_con_camara_detenida (expresiones.tests.test_web.ApiTests.test_video_con_camara_detenida) ... ok
+test_api_informa_detector_faltante (expresiones.tests.test_web.ErroresTests.test_api_informa_detector_faltante) ... ok
+test_aviso_si_falta_el_modelo (expresiones.tests.test_web.ErroresTests.test_aviso_si_falta_el_modelo) ... ok
+test_pagina_amigable_si_postgresql_no_responde (expresiones.tests.test_web.ErroresTests.test_pagina_amigable_si_postgresql_no_responde) ... Error de base de datos: connection refused
+ok
+test_ciclo_de_sesion (expresiones.tests.test_web.OyenteBaseDatosTests.test_ciclo_de_sesion) ... ok
+test_detalle_y_eliminacion_de_sesion (expresiones.tests.test_web.PaginasTests.test_detalle_y_eliminacion_de_sesion) ... ok
+test_historial_vacio (expresiones.tests.test_web.PaginasTests.test_historial_vacio) ... ok
+test_paginas_responden (expresiones.tests.test_web.PaginasTests.test_paginas_responden) ... ok
+test_panel_muestra_las_seis_expresiones (expresiones.tests.test_web.PaginasTests.test_panel_muestra_las_seis_expresiones) ... ok
+test_registros_antiguos_de_miedo_y_desprecio_se_muestran_como_otra (expresiones.tests.test_web.PaginasTests.test_registros_antiguos_de_miedo_y_desprecio_se_muestran_como_otra) ... ok
+test_sesion_inexistente_404 (expresiones.tests.test_web.PaginasTests.test_sesion_inexistente_404) ... ok
+test_iniciar_reconocer_guardar_y_detener (expresiones.tests.test_web.FlujoCompletoTests.test_iniciar_reconocer_guardar_y_detener) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 1.499s
+
+OK
+Destroying test database for alias 'default' ('test_detector_expresiones')...
+
+ OK
+System check identified no issues (0 silenced).
